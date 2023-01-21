@@ -67,8 +67,8 @@ const login = async (req, res) => {
                 email,
                 mobile,
                 role,
-                team,
                 tasks,
+                team,
                 token: { accessToken, refreshToken }
             });
         } else {
@@ -114,9 +114,14 @@ const createTeam = async (req, res) => {
         const { _id: manager} = await findUserByEmail(req.user.email);
         const pendingValidation = members.map(async (member) => userRegistrationValidation.validateAsync(member));
         const validatedMembers = await Promise.all(pendingValidation);
-        const pendingMemberCreation = validatedMembers.map(async (member) => registerationService({ ...member, team: team_id }));
+
+        const pendingMemberCreation = validatedMembers.map(async (member) => registerationService(member));
         const registeredMembers = await Promise.all(pendingMemberCreation);
-        const registeredTeam = await registerTeam({ team_id, name, members: registeredMembers, manager })
+        const registeredTeam = await registerTeam({ team_id, name, members: registeredMembers, manager });
+       
+        await updateUserData({ id: manager, data: { team: registeredTeam._id }});
+        const pendingUpdateTeamInMember = registeredMembers.map(member => updateUserData({ id: member._id, data: { team: registeredTeam._id }}));
+        await Promise.all(pendingUpdateTeamInMember)
         return sendOK(res, registeredTeam);
     } catch(err) {
         console.error('ERROR | createTeam | ', err);
@@ -246,7 +251,6 @@ const updateTask = async (req, res) => {
             ...newTaskDetails, 
             ...newTaskDetails.due_date && { due_date: new Date(newTaskDetails.due_date) }
         });
-        await updateUserTasks({ id: managerId, taskId: task._id });
         if (newTaskDetails.assignee) await updateUserTasks({ id: newTaskDetails.assignee, taskId: task._id });
 
         return sendOK(res, task);
