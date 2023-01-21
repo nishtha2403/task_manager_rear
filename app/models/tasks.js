@@ -10,7 +10,7 @@ const taskSchema = mongoose.Schema(
         },
         assignee: {
             type: mongoose.Schema.ObjectId,
-            ref: 'user'
+            ref: 'users'
         },
         status: {
             type: String
@@ -23,7 +23,7 @@ const taskSchema = mongoose.Schema(
         },
         created_by: {
             type: mongoose.Schema.ObjectId,
-            ref: 'user'
+            ref: 'users'
         }
     },
     {
