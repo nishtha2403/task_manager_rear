@@ -9,6 +9,7 @@ const {
     newMember,
     updateMember,
     deleteMember,
+    allTask,
     newTask,
     updateTask,
     deleteTask
@@ -22,7 +23,8 @@ router.post('/create-team', authenticateUser, createTeam);
 router.post('/member', authenticateUser, newMember)
       .put('/member/:id', authenticateUser, updateMember)
       .delete('/member/:id', authenticateUser, deleteMember);
-router.post('/task', authenticateUser, newTask)
+router.get('/task', authenticateUser, allTask)
+      .post('/task', authenticateUser, newTask)
       .put('/task/:id', authenticateUser, updateTask)
       .delete('/task/:id', authenticateUser, deleteTask);
 

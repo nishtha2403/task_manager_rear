@@ -202,6 +202,22 @@ const deleteMember = async (req, res) => {
 }
 
 /**
+ * @desc Get all tasks
+ * @route /task
+ * @param {object} req 
+ * @param {object} res 
+ */
+const allTask = async (req, res) => {
+    try {
+        const { tasks } = await findUserByEmail(req.user.email);
+        return sendOK(res, tasks);
+    } catch(err) {
+        console.error('ERROR | fetchAllTasks | ', err);
+        return sendError(res, err);
+    }
+}
+
+/**
  * @desc Create New Task
  * @route /task
  * @param {object} req 
@@ -294,6 +310,7 @@ module.exports = {
     newMember,
     updateMember,
     deleteMember,
+    allTask,
     newTask,
     updateTask,
     deleteTask
