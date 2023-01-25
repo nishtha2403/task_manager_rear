@@ -76,7 +76,7 @@ const removeTaskFromUser = async (userId, taskId) => {
 
 const removeTaskFromAssignee = async (taskId) => {
     const { assignee } = await Tasks.findById(taskId, { assignee: 1 });
-    return removeTaskFromUser(assignee, taskId);
+    return assignee ? removeTaskFromUser(assignee, taskId) : '';
 }
 
 const deleteTaskFromDb = (taskId) => {
