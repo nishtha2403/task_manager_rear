@@ -24,7 +24,8 @@ const {
     removeTaskFromUser,
     removeTaskFromAssignee,
     updateTaskDetails,
-    deleteTaskFromDb
+    deleteTaskFromDb,
+    getTeamDetails
 } = require('../dals');
 const { customError, sendError, sendOK } = require('../helpers');
 
@@ -123,6 +124,25 @@ const createTeam = async (req, res) => {
         const pendingUpdateTeamInMember = registeredMembers.map(member => updateUserData({ id: member._id, data: { team: registeredTeam._id }}));
         await Promise.all(pendingUpdateTeamInMember)
         return sendOK(res, registeredTeam);
+    } catch(err) {
+        console.error('ERROR | createTeam | ', err);
+        return sendError(res, err);
+    }
+}
+
+/**
+ * @desc Get all team members
+ * @route /team
+ * @param {object} req 
+ * @param {object} res 
+ */
+const allTeamMembers = async (req, res) => {
+    try {
+        const { id } = await objectIdValidation.validateAsync(req.params);
+        if (!objectID.isValid(id)) throw customError(400, 'Enter a valid id');
+
+        const teamDetails = await getTeamDetails(id);
+        return sendOK(res, teamDetails);
     } catch(err) {
         console.error('ERROR | createTeam | ', err);
         return sendError(res, err);
@@ -307,6 +327,7 @@ module.exports = {
     login,
     refreshToken,
     createTeam,
+    allTeamMembers,
     newMember,
     updateMember,
     deleteMember,

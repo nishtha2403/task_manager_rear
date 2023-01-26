@@ -6,6 +6,7 @@ const {
     login,
     refreshToken,
     createTeam,
+    allTeamMembers,
     newMember,
     updateMember,
     deleteMember,
@@ -19,7 +20,8 @@ const { authenticateUser } = require('../helpers');
 router.post('/register', register);
 router.post('/login', login);
 router.get('/refresh-token', refreshToken);
-router.post('/create-team', authenticateUser, createTeam);
+router.post('/team', authenticateUser, createTeam)
+      .get('/team/:id', authenticateUser, allTeamMembers);
 router.post('/member', authenticateUser, newMember)
       .put('/member/:id', authenticateUser, updateMember)
       .delete('/member/:id', authenticateUser, deleteMember);

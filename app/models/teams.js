@@ -10,11 +10,13 @@ const teamSchema = mongoose.Schema(
         name: {
             type: String
         },
-        members: {
-            type: Array
-        },
+        members: [{
+            type: mongoose.Schema.ObjectId,
+            ref: 'users'
+        }],
         manager: {
-            type: mongoose.Schema.ObjectId
+            type: mongoose.Schema.ObjectId,
+            ref: 'users'
         }
     },
     {

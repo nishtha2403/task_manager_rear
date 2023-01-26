@@ -83,6 +83,10 @@ const deleteTaskFromDb = (taskId) => {
     return Tasks.deleteOne({ _id: taskId });
 }
 
+const getTeamDetails = (teamId) => {
+    return Teams.findById(teamId).populate([{path: 'manager', select: 'name email mobile'}, {path: 'members', select: 'name email mobile'}]);
+}
+
 module.exports = {
     registerUser,
     findUserByEmail,
@@ -98,5 +102,6 @@ module.exports = {
     updateUserTasks,
     removeTaskFromUser,
     removeTaskFromAssignee,
-    deleteTaskFromDb
+    deleteTaskFromDb,
+    getTeamDetails
 }
